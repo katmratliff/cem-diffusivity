@@ -1,0 +1,30 @@
+1.0	OffShoreWvHt /* meters */
+10.0 Period	/* seconds */
+	 ChangeWaveClimate /* A logical int to set model to run changing wave climate experiments; 1 = yes */
+0	 DoDiff /* A logical int to set model to undertake targeted diffusivity calculations; 1 = yes */
+101  DiffCalcStep /* The value of CurrentTimeStep at which the CEM pauses to run diffusivity calculations; set to Initial_steps + 1 here */
+100	 nDiffSteps /* The number of steps over which to undertake diffusivity calculations on a static coast */
+1	 StopAfterDiff /* A logical int; quits the CEM after diffusivity calculations if set to 1; default...*/
+0	 RockCalcs /* A logical int to set model to include rock calculations coded by Lisa Valvo; 1 = yes */
+25  SaveSpacing /* The point at which to save out the calculated data: CEM_n.out, ShorePos_n.dat and wave data files */
+0.50 Initial_Asym /* fractional portion of waves coming from positive (left) direction */
+0.30 Initial_Highness /* .5 = even dist, < .5 high angle domination. NOTE U = (1-Highness) cf Ashton & Murray 2006a */
+0.70 Target_Asym  /* Target Asymmetry value for changing wave climate experiments */
+0.45 Target_Highness /* Target Highness value for changing wave climate experiments */
+0.70 Diff_Asym /* Wave climate asymmetry to be used for diffusivity calculations */
+0.45 Diff_Highness /* Wave climate highness (1-U) to be used in diffusivity calculations */
+1 	TimeStep /* days - reflects rate of sediment transport per time step */
+100 Initial_steps /* The number of steps in the initial model phase before transition to some new wave climate */
+1 	Trans_steps /* The number of time steps over which the transition to a new wave climate takes place */
+51  RunOn_steps /* The number of time steps over which the model runs with the new wave climate */
+1	Duration /* Number of time steps calculations loop at same wave angle */
+1   StopAfter /* Stop model run after a specific number of time steps; always set to Initial_steps here by default */
+1 	SlowWeatherCoeff /* Weathering rate of slow rock e.g. 0.5 = slow weathering, 1/2 as fast LMV */
+1	FastWeatherCoeff /* Weathering rate of fast rock e.g. 2 = fast weathering, 2 times faster than normal LMV */
+0.5	PercentFineFast /* Percent of fast weathering rock lost because it is too fine to stay in nearshore LMV */
+0.0 PercentFineSlow /* Percent of slow weathering rock lost because it is too fine to stay in nearshore LMV */
+2.0	ErosionRatePerYear
+0	coastrotation /* Angle (deg) used to align coastline with real wave climate */
+1	waveheightchange /* Factor applied to the input wave height; 1 = no change, 0.5 = half wave height, and 2 = double wave height*/
+1	waveperiodchange /* Factor applied to the input wave period; 1 = no change, 0.5 = half wave period, and 2 = double wave period*/
+1.1	Kc  /* the sand transport coefficient in the CERC equation 0.46 for SWH, 1.1 for RMS (as in original CEM) */
