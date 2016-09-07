@@ -559,7 +559,7 @@ int main(void)
 	}
 
 	PeriodicBoundaryCopy();
-	FixBeach();
+	// FixBeach();
 
 /* Count Initial Mass */
 	MassInitial = MassCount();
@@ -836,8 +836,8 @@ int main(void)
                 FixFlow();			        /*LMV*/
             }
 
-            TransportSedimentSweep();   /* This evolves the beach, calling AdjustShore() and ErodeTheBeach() */
-            FixBeach();
+            // TransportSedimentSweep();   /* This evolves the beach, calling AdjustShore() and ErodeTheBeach() */
+            // FixBeach();
 
             if (!DiffPause)
             {
