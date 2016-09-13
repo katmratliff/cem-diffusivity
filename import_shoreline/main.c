@@ -140,8 +140,8 @@ float radtodeg = 180/pi; /* transform rads to degrees */
 /* Model beach aspect parameters */
 
 #define CellWidth	    100 /* size of cells (meters) */
-#define Xmax	        400	/* number of cells in x (cross-shore) direction */
-#define Ymax		    500	/* number of cells in y (longshore) direction */
+#define Xmax	        1600	/* number of cells in x (cross-shore) direction */
+#define Ymax		    2000	/* number of cells in y (longshore) direction */
 #define MaxBeachLength	8*Ymax	/* maximum length of arrays that contain beach data at each time step */
 #define ShelfSlope	    0.001	/* slope of continental shelf */
 #define ShorefaceSlope	0.01	/* for now, linear slope of shoreface */
@@ -182,7 +182,7 @@ int    nDiffSteps = 0;          /* if DoDiff is 1, this sets the number of steps
                                    Should be of the order of 10^3, max 10^4 */
 int    DiffStep = 0;            /* The current step in the diffusivity calculations; set = to nDiffSteps when DiffPause becomes true */
 int    DiffCalcStep = 0;        /* The point at which the CEM pauses to undertake diffusivity calculations if DoDiff is true */
-int    DiffPause = 1;           /* This logical controls whether the functions that evolve the beach are run; if true, then they are not */
+int    DiffPause = 0;           /* This logical controls whether the functions that evolve the beach are run; if true, then they are not */
 int    StartDiff = 0;           /* Just helps to control a screen message when diffusivity calculations start */
 int    StopAfterDiff = 0;       /* If this becomes 1 (as set in CEM_init.dat), then quite the CEM after the difusivity calculations */
 double TimeStep =	1;          /* days - reflects rate of sediment transport per time step */
@@ -4180,7 +4180,7 @@ void InitNormal(void)
 	Amp = 100;
 
   /* import shoreline file for diffusivity calcs KMR*/
-  ShorelineFile = fopen("semicircle.dat", "r");
+  ShorelineFile = fopen("big_semicircle.dat", "r");
 
   for (k = 0; k < Ymax; k++)
   {
@@ -4212,9 +4212,9 @@ void InitNormal(void)
     {
       InitialRock = InitRock;
 
-      if ((250 < y) && (y < Ymax+250))
+      if ((1000 < y) && (y < Ymax+1000))
       {
-        InitialBeach = shoreline_config[y-250];
+        InitialBeach = shoreline_config[y-1000];
       }
       else
       {

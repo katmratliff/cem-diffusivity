@@ -140,14 +140,14 @@ float radtodeg = 180/pi; /* transform rads to degrees */
 /* Model beach aspect parameters */
 
 #define CellWidth	    100 /* size of cells (meters) */
-#define Xmax	        400	/* number of cells in x (cross-shore) direction */
-#define Ymax		    500	/* number of cells in y (longshore) direction */
+#define Xmax	        300	/* number of cells in x (cross-shore) direction */
+#define Ymax		    2000	/* number of cells in y (longshore) direction */
 #define MaxBeachLength	8*Ymax	/* maximum length of arrays that contain beach data at each time step */
 #define ShelfSlope	    0.001	/* slope of continental shelf */
 #define ShorefaceSlope	0.01	/* for now, linear slope of shoreface */
 #define DepthShoreface	10	/* minimum depth of shoreface due to wave action (meters) */
 #define InitBeach	    100	/* cell where intial conditions changes from beach to ocean */
-#define InitRock	    0	/* cell where initial conditions change from beach to rock LMV*/
+#define InitRock	    5	/* cell where initial conditions change from beach to rock LMV*/
 #define InitialDepth	10	/* theoretical depth in meters of continental shelf at x = InitBeach */
 #define NumberChunk	1	/* Number of chunks of rock in alongshore direction with different weathering rates LMV */
 #define FindCellError	5	/* if we run off of array, how far over do we try again? */
@@ -270,7 +270,7 @@ int	   NoPauseRun = 1;		/* Disable PauseRun subroutine */
 /* Parameters controlling the 'noise' on the initial rock and beach boundaries */
 
 int	   InitialPert = 0;	        /* Start with a bump? if =1-->square pert, if =2-->pointy pert */
-int	   DiffusiveHump = 1;	    /* Shoreline is sinusoidal LMV	*/
+int	   DiffusiveHump = 0;	    /* Shoreline is sinusoidal LMV	*/
 int	   InitialSmooth = 0;	    /* Smooth starting conditions */
 int	   InitialSmoothRock = 1;	/* Smooth rock interface starting conditions LMV */
 int    ChunkLength = Ymax;	    /* Alongshore length of a chunk of fast or slow weathering rock LMV */
@@ -369,7 +369,6 @@ FILE	*ReadWaveFile;
 FILE    *ReadRealWaveFile;
 FILE    *ReadControlFile;
 FILE    *CEM_LogFile;
-FILE    *ShorelineFile;
 
 /* Computational Arrays (determined for each time step) */
 
@@ -4170,23 +4169,12 @@ void InitNormal(void)
 	{
 	int 	x,y,n; /* y1 */
 	int 	InitialBeach;
-	int	  InitialRock;
+	int	    InitialRock;
 	int 	Amp; /*Amplitude of cos curve*/
-	int   blocks = 1; /* have hard stuff just as blocks near the beach, or columns? */
-  int   k;
-  float shoreline_config[Ymax];
+	int     blocks = 1; /* have hard stuff just as blocks near the beach, or columns? */
 	printf("Condition Initial \n");
 
-	Amp = 100;
-
-  /* import shoreline file for diffusivity calcs KMR*/
-  ShorelineFile = fopen("semicircle.dat", "r");
-
-  for (k = 0; k < Ymax; k++)
-  {
-    fscanf(ShorelineFile, "%f,", &shoreline_config[k] );
-  }
-  fclose(ShorelineFile);
+	Amp = 10;
 
 
 	for (y = 0; y < 2*Ymax; y++)
@@ -4197,38 +4185,18 @@ void InitNormal(void)
 
 		if (DiffusiveHump)
 		/* shoreline is a cosine curve, diffusive LMV */
-		// {
-		// 	InitialRock = (InitRock + (-Amp*cos((2*pi*y)/Ymax))- (InitBeach-InitRock-1));
-		// 	InitialBeach = (InitBeach + (-Amp*cos((2*pi*y)/Ymax)));
-		// }
+		{
+			InitialRock = (InitRock + (-Amp*cos((2*pi*y)/Ymax))- (InitBeach-InitRock-1));
+			InitialBeach = (InitBeach + (-Amp*cos((2*pi*y)/Ymax)));
+		}
 
-    /* shoreline is a sine curve for diffusivity calcs KMR */
-    // {
-    //   InitialRock = (InitRock + (-Amp*sin((2*pi*y)/Ymax))- (InitBeach-InitRock-1));
-    //   InitialBeach = (InitBeach + (-Amp*sin((2*pi*y)/Ymax)));
-    // }
-
-    /* shoreline has semi-circular bump for diffusivity calcs - must import KMR */
-    {
-      InitialRock = InitRock;
-
-      if ((250 < y) && (y < Ymax+250))
-      {
-        InitialBeach = shoreline_config[y-250];
-      }
-      else
-      {
-        InitialBeach = InitBeach;
-      }
-    }
-
-      if (x < InitialRock)   /*LMV*/
-      {
-              PercentFullRock[x][y] = 1.0;
-              PercentFullSand[x][y] = 0.0;
-              AllRock[x][y] = 'y';
-              AllBeach[x][y] = 'n';
-      }
+                        if (x < InitialRock)   /*LMV*/
+                        {
+                                PercentFullRock[x][y] = 1.0;
+                                PercentFullSand[x][y] = 0.0;
+                                AllRock[x][y] = 'y';
+                                AllBeach[x][y] = 'n';
+                        }
 
 			else if (x == InitialRock) /*LMV*/
 			{
