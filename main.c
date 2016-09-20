@@ -371,6 +371,7 @@ FILE    *ReadRealWaveFile;
 FILE    *ReadControlFile;
 FILE    *CEM_LogFile;
 FILE    *ShorelineFile;
+FILE    *AnglesFile;
 
 /* Computational Arrays (determined for each time step) */
 
@@ -564,7 +565,7 @@ int main(void)
 	}
 
 	PeriodicBoundaryCopy();
-	// FixBeach();
+	FixBeach();
 
 /* Count Initial Mass */
 	MassInitial = MassCount();
@@ -841,8 +842,8 @@ int main(void)
                 FixFlow();			        /*LMV*/
             }
 
-            // TransportSedimentSweep();   /* This evolves the beach, calling AdjustShore() and ErodeTheBeach() */
-            // FixBeach();
+            TransportSedimentSweep();   /* This evolves the beach, calling AdjustShore() and ErodeTheBeach() */
+            FixBeach();
 
             if (!DiffPause)
             {
@@ -4165,6 +4166,21 @@ currently this function has no seed
     return ((float)(AB_rand));
 }
 
+void ImportAngles(void)
+  /* KMR: Imports angles to test for transport */
+
+{
+  int i;
+  int no_angles = 91;
+  float TestAngles[no_angles];
+
+  AnglesFile = fopen("angles_to_test.dat","r"):
+  for (i = 0, i < no_angles, i++)
+  {
+    fscanf(AnglesFile, "%f,", &TestAngles[i] );
+  }
+  fclose(AnglesFile);
+}
 
 void InitNormal(void)
 	/* Creates initial beach conditions 						*/
