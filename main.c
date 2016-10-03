@@ -4178,6 +4178,7 @@ void ImportAngles(void)
   for (i = 0, i < no_angles, i++)
   {
     fscanf(AnglesFile, "%f,", &TestAngles[i] );
+    TestAngles[i] *= degtorad;
   }
   fclose(AnglesFile);
 }
